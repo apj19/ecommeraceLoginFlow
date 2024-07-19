@@ -4,6 +4,7 @@ import {useForm, SubmitHandler} from "react-hook-form"
 import { useState } from 'react';
 import {z} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
+import BtnLoder from './components/BtnLoder';
 
 const loginFormSchema=z.object({
   email: z.string().email(),
@@ -33,7 +34,7 @@ export default function HomePage() {
     } catch (error) {
       //do error status code logit
       setError("root",{
-        message:"Email/password is incorrect"
+        message:"invalid email or password"
       })
       
     }
@@ -85,7 +86,7 @@ export default function HomePage() {
                 
                 className="inline-flex w-[456px] mt-8 items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
               >
-                {isSubmitting? "loading" : "LOGIN"}
+                {isSubmitting? <BtnLoder/> : "LOGIN"}
                 
         </button>
         {errors.root && <p className='text-red-600'>{errors.root.message}</p>}
