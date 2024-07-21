@@ -54,7 +54,7 @@ export async function POST(request:NextRequest){
                 },
               });
             //sending verification mail
-            // const res=await sendEmail(email);
+            const res=await sendEmail(email);
             // console.log(res);
             
             const jwttoken =  createJwtToken(email);
