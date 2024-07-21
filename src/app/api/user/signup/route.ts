@@ -74,7 +74,7 @@ export async function POST(request:NextRequest){
 
             
     } catch (error) {
-        return NextResponse.json({error:"server error"},{status:500})    
+        return NextResponse.json({error:"server error in signup"},{status:500})    
     }
 
 }
