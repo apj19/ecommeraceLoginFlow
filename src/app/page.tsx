@@ -5,19 +5,15 @@ import { useState } from 'react';
 import {z} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import BtnLoder from './components/BtnLoder';
-
-const loginFormSchema=z.object({
-  email: z.string().email(),
-  password:z.string()
-  .min(8, { message: "Password is too short" })
-  .max(20, { message: "Password is too long" })
-})
-
+import axios from 'axios';
+import { loginFormSchema } from './helper/zodschems';
+import {useRouter} from "next/navigation";
 type FormFields= z.infer<typeof loginFormSchema>;
 
 export default function HomePage() {
 
   const [showPassword, setShowPassword]= useState<boolean>(false);
+  const router = useRouter();
 
   const {register,handleSubmit,setError, formState: { errors,isSubmitting }}= useForm<FormFields>({
     resolver: zodResolver(loginFormSchema)
@@ -30,9 +26,13 @@ export default function HomePage() {
       // await new Promise((res)=> setTimeout(res,1000));
       // throw new Error("testing")
       //server action here
-        console.log(data);
+      const response= await axios.post("/api/user/signin",data);
+      console.log(response.status);
+      router.push("/home");
+        
     } catch (error) {
       //do error status code logit
+      console.log(error)
       setError("root",{
         message:"invalid email or password"
       })

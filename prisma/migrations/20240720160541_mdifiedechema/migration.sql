@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "isverified" SET DEFAULT false,
+ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

@@ -10,11 +10,28 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model User {
+    id                 String               @id @default(uuid())
+    name               String
+    email              String               @unique
+    password           String
+    isverified         Boolean              @default(false)
+    verifyToken        String?
+    createdAt          DateTime             @default(now())
+    updatedAt          DateTime             @default(now()) @updatedAt
+    categorypreferance categorypreferance[]
+}
 
-    @@index([name])
+model Categories {
+    id                 String               @id @default(uuid())
+    category           String
+    categorypreferance categorypreferance[]
+}
+
+model categorypreferance {
+    id           String     @id @default(uuid())
+    Userid       User       @relation(fields: [userId], references: [id])
+    userId       String     @unique
+    catgoeryid   Categories @relation(fields: [categoriesId], references: [id])
+    categoriesId String     @unique
 }

@@ -3,7 +3,13 @@ import {z} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm, SubmitHandler} from "react-hook-form"
 import BtnLoder from "~/app/components/BtnLoder";
-
+import { useEffect, useState } from "react";
+import {useRouter} from "next/navigation";
+import axios from "axios";
+interface UserResponse {
+  email: string;
+  // Add other fields as needed
+}
 
 const verifiyOtp=z.object({
   digit1: z.coerce.number({message:"Expeted number"}).int().gte(0).lte(9),
@@ -20,6 +26,9 @@ type VerifyOtp=z.infer<typeof verifiyOtp>;
 
 export default function Verify(){
 
+  const [userEmail,setUserEmail]= useState('default');
+  const router = useRouter();
+
   const {register,handleSubmit,setError,formState:{errors,isSubmitting}} = useForm<VerifyOtp>({
     resolver:zodResolver(verifiyOtp)
   });
@@ -27,18 +36,44 @@ export default function Verify(){
 
   const otpVerification:SubmitHandler<VerifyOtp>= async (data)=>{
 
-   try {
-      await new Promise(res=> setTimeout(res,1000));
-    
-    console.log(data);
-   } catch (error) {
-    setError("root",{
-      message:"Invalid /Expired OTP"
-    })
-    
-   }
+      try {
+        // console.log(data)
+        const propertyValues = Object.values(data);
+        console.log(propertyValues.join('')); 
+         const response= axios.post("api/user/verify",{
+          otp:propertyValues.join('')
+         });
+         router.push("/home");
+        
+      } catch (error) {
+        setError("root",{
+          message:"Invalid OTP try again"
+        })
+        
+      
+        }
   }
 
+  async function fetchUserDetails(){
+    try {
+        const response = await axios.get<UserResponse>('/api/user');
+        // console.log(response);
+        // console.log(response.data.email as String);
+        const email:string=response.data.email 
+        setUserEmail(email)
+     } catch (error) {
+      router.push("/");
+     }
+     
+  }
+
+
+    useEffect(() => {
+      void fetchUserDetails();
+      
+
+      
+    }, [])
 
 
     return (
@@ -48,7 +83,7 @@ export default function Verify(){
       
         <p>Enter the 8 digit code you have received on 
         </p>
-        <p>swa***@gmail.com</p>
+        <p>{userEmail}</p>
   
 
 
@@ -68,8 +103,8 @@ export default function Verify(){
               <input type="text" maxLength={1} {...register("digit7")}  className="block w-[46px] h-[48px] rounded-sm text-center border border-gray-400  text-sm  " />
               <input type="text" maxLength={1} {...register("digit8")}  className="block w-[46px] h-[48px] rounded-sm text-center border border-gray-400  text-sm  " />   
               </div>
-              {errors.digit1 && <p className='text-red-600'>{
-              errors.digit1.message}</p>}
+              {/* {errors.digit1 && <p className='text-red-600'>{
+              errors.digit1.message}</p>} */}
               {errors.root && <p className='text-red-600'>{
               errors.root.message}</p>}
           

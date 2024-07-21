@@ -4,18 +4,14 @@ import {useForm, SubmitHandler} from "react-hook-form"
 import {z} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import BtnLoder from '../components/BtnLoder';
-
-const signUpFormSchema=z.object({
-  name:z.string().min(3),
-  email: z.string().email(),
-  password:z.string()
-  .min(8, { message: "Password is too short" })
-  .max(20, { message: "Password is too long" })
-})
+import { signUpFormSchema } from '../helper/zodschems';
+import {useRouter} from "next/navigation";
+import axios from 'axios';
 
 type FormField=z.infer<typeof signUpFormSchema>;
 
 export default function Signup(){
+  const router = useRouter();
 
  const {register,handleSubmit,setError,formState:{errors,isSubmitting}} = useForm<FormField>({
   resolver:zodResolver(signUpFormSchema)
@@ -23,17 +19,20 @@ export default function Signup(){
 
  const signUpFormSubmit:SubmitHandler<FormField>= async (data)=>{
 
-    try {
-      // await new Promise(res => setTimeout(res, 1000));
-      // throw new Error();
-      console.log(data);
-      
-    } catch (error) {
-      setError("root",{
-        message:"invalid email or password"
-      })
-      
-    }
+      try {
+
+        const response= await axios.post("/api/user/signup",data);
+        router.push("/verify");
+        console.log("after push",response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+
+
+    
+
  }
 
 

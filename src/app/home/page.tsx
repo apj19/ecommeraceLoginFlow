@@ -1,10 +1,49 @@
+"use client"
+import axios from "axios";
+import { useEffect, useState } from "react"
+import {useRouter} from "next/navigation";
+interface UserResponse {
+  email: string;
+  // Add other fields as needed
+}
 export default function LandingPage(){
+
+  const [userEmail,setUserEmail]= useState('default');
+  const router = useRouter();
+
+  async function fetchUserDetails(){
+
+    
+    try {
+        const response = await axios.get<UserResponse>('/api/user');
+        console.log(response);
+        // console.log(response.data.email as String);
+        const email:string=response.data.email 
+        setUserEmail(email)
+     } catch (error) {
+      router.push("/");
+     }
+     
+  }
+
+
+  useEffect(() => {
+    void fetchUserDetails();
+    
+
+    
+  }, [])
+  
+
+
+  
+
 
     return (
         <main className=" flex justify-center ">
       <div className="w-[576px] flex flex-col items-center border rounded-[20px] mt-[40px]">
         <h1 className="mt-[40px] font-[600] text-[2rem]">Please mark your interests!</h1>
-        <p className="mt-[18px] font-normal">We will keep you notified.</p>
+        <p className="mt-[18px] font-normal">We will keep you notified:-{userEmail}.</p>
         
 
         <div className="w-[456px] mt-8">
