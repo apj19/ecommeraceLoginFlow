@@ -28,7 +28,7 @@ export const sendEmail= async (email:string)=>{
             },
           });
         
-            
+         console.log("inside mailer");   
         const transport = nodemailer.createTransport({
             host:"smtp.gmail.com",
             secure:true,
