@@ -40,7 +40,7 @@ export const sendEmail= async (email:string)=>{
             }
           });
           const mailOptions = {
-            from: 'apjcr223@gmail.com',
+            from: process.env.USER_Email!,
             to: email,
             subject: "ecommerace otp " ,
             html: `<p>your OTP is ${otp}<p/>`

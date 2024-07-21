@@ -23,7 +23,7 @@ export default function Signup(){
 
         const response= await axios.post("/api/user/signup",data);
         router.push("/verify");
-        console.log("after push",response);
+        // console.log("after push",response);
         
       } catch (error) {
         console.log(error);

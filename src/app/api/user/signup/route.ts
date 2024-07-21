@@ -22,6 +22,7 @@ export async function POST(request:NextRequest){
         ///doing input validations
         const validation=signUpFormSchema.safeParse(requestData);
         //if input not val;id sending 400 error request
+        
         if(!validation.success){
             return  NextResponse.json({error:"Bad input"},{status:400}) 
         }
